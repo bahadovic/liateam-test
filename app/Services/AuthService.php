@@ -7,8 +7,6 @@ use App\Http\Resources\LoginResource;
 use App\Http\Resources\RefreshTokenResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
-
 
 class AuthService
 {
@@ -21,7 +19,6 @@ class AuthService
         }
 
         if (!Hash::check($params['password'], $user->getAttribute('password'))) {
-            RateLimiter::hit(request()->ip(), config('auth.login_rate_limiter'));
             return responseFormatter()->entity(error: 'login.user_and_password.not_found');
         }
 
@@ -32,8 +29,7 @@ class AuthService
             'refresh_token' => $jwt['refresh_token'],
         ]);
 
-        return responseFormatter()->success(
-            data: LoginResource::make([
+        return responseFormatter()->success(data: LoginResource::make([
                 'user' => $user,
                 'access_token' => $jwt['access_token'],
                 'refresh_token' => $jwt['refresh_token'],
@@ -72,16 +68,10 @@ class AuthService
 
     public function register(array $params)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
         $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'name' => $params['name'],
+            'email' => $params['email'],
+            'password' => Hash::make($params['password']),
         ]);
 
         $token =  JWT::setup(user: $user);

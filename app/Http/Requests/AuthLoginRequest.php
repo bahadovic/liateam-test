@@ -7,7 +7,7 @@ class AuthLoginRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string', 'min:5', 'max:16'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string', 'min:8', 'max:16']
         ];
     }
