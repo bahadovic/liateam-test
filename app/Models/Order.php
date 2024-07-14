@@ -11,9 +11,9 @@ class Order extends Model
 
     protected $fillable = ['name', 'email', 'password'];
 
-    public function orders()
+    public function products()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsToMany(Product::class);
     }
 
     protected function casts()
