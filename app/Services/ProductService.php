@@ -4,49 +4,24 @@ namespace App\Services;
 
 use App\Facades\JWT;
 use App\Http\Resources\LoginResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\RefreshTokenResource;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AuthService
+class ProductService
 {
-    public function login(array $params): array
+    public function index(): array
     {
-
-        $user = User::filter($params)->first();
-        if (!$user) {
-            return responseFormatter()->entity(error: 'login.user_and_password.not_found');
-        }
-
-        if (!Hash::check($params['password'], $user->getAttribute('password'))) {
-            return responseFormatter()->entity(error: 'login.user_and_password.not_found');
-        }
-
-        $jwt = JWT::setup(user: $user);
-
-        $user->update([
-            'access_token' => $jwt['access_token'],
-            'refresh_token' => $jwt['refresh_token'],
-        ]);
-
-        return responseFormatter()->success(data: LoginResource::make([
-                'user' => $user,
-                'access_token' => $jwt['access_token'],
-                'refresh_token' => $jwt['refresh_token'],
-            ]),
-            message: 'login successful'
-        );
+        $product = Product::all();
+        return responseFormatter()->success(data: ProductResource::make($product), message: 'login successful');
     }
 
-    public function logout(): array
+    public function store(array $params): array
     {
-        auth()->user()->update([
-            'access_token' => null,
-            'refresh_token' => null,
-        ]);
-        return responseFormatter()->success(
-            message: __('trans.auth.logout.successful')
-        );
+        Product::create($params);
+        return responseFormatter()->success(message: 'product.store.successful');
     }
 
     public function refreshToken(array $params): array

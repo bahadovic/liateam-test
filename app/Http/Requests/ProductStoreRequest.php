@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-class ProductRequest extends BaseFormRequest
+class ProductStoreRequest extends BaseFormRequest
 {
     public function rules(): array
     {

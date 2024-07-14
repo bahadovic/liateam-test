@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class OrderRequest extends BaseFormRequest
+class OrderUpdateRequest extends BaseFormRequest
 {
     public function rules(): array
     {

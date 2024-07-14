@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
-use App\Http\Resources\ProductResource;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
+
+    public function __construct(
+        private readonly ProductService $service
+    )
+    {
+    }
     public function index()
     {
-        return Product::all();
+        $data = $this->service->index();
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'inventory' => 'required|integer',
-        ]);
-
-        $product = Product::create($validatedData);
-
-        return response()->json($product, 201);
+        $data = $this->service->store(params: $request->safe()->toArray());
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
     public function show($id)
@@ -31,7 +32,7 @@ class ProductController extends Controller
         return Product::findOrFail($id);
     }
 
-    public function update(Request $request, $id)
+    public function update(ProductUpdateRequest $request, $id)
     {
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
