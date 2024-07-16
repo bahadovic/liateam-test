@@ -53,6 +53,12 @@ class OrderService
 
     public function update(array $params)
     {
+
+        $order = Order::filter($params);
+        if (!$order){
+            return responseFormatter()->entity(error: ['orderId' => 'order.not_font']);
+        }
+
         $totalPrice = 0;
         $products = [];
 
@@ -72,7 +78,7 @@ class OrderService
             $products[] = $product;
         }
 
-        $order = Order::filter($params);
+
         $order->update([
             'user_id' => auth()->id(),
             'products' => $products,
