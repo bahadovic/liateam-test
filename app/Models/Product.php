@@ -10,6 +10,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'price', 'inventory'];
+
     public function scopeFilter(Builder $query, array $params): Builder
     {
         if (isset($params['id'])) {

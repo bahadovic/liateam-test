@@ -7,9 +7,9 @@ class OrderUpdateRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer'],
-            'products' => ['required'],
-            'total_price' => ['required', 'numeric'],
+            'products' => ['required', 'array'],
+            'products.*.id' => ['required'],
+            'products.*.quantity' => ['required', 'required','min:1']
         ];
     }
 

@@ -2,65 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
-use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\OrderService;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        private readonly OrderService $service
+    )
+    {
+    }
     public function index()
     {
-        return Order::all();
+        $data = $this->service->index();
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
+
     }
 
-    public function store(Request $request)
+    public function store(OrderStoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'products' => 'required|array',
-            'products.*.id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-        ]);
-
-        $totalPrice = 0;
-        $products = [];
-
-        foreach ($validatedData['products'] as $product) {
-            $productModel = Product::findOrFail($product['id']);
-            if ($productModel->inventory < $product['quantity']) {
-                return response()->json(['error' => 'Insufficient inventory for product ID ' . $product['id']], 400);
-            }
-
-            $productModel->inventory -= $product['quantity'];
-            $productModel->save();
-
-            $totalPrice += $productModel->price * $product['quantity'];
-            $products[] = $product;
-        }
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'products' => $products,
-            'total_price' => $totalPrice,
-        ]);
-
-        return response()->json($order, 201);
+        $data = $this->service->store(params: $request->safe()->toArray());
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
     public function show($id)
     {
-        return Order::findOrFail($id);
+        $data = $this->service->show(params: ['id' => $id]);
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
-    public function update(Request $request, $id)
+    public function update(OrderUpdateRequest $request, $id)
     {
-        // Update logic here (similar to store)
+        $data = $this->service->update(params: $request->safe()->merge(['id' => $id])->toArray());
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
     public function destroy($id)
     {
-        $order = Order::findOrFail($id);
-        $order->delete();
-
-        return response()->json(null, 204);
+        $data = $this->service->destroy(params: ['id' => $id]);
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 }
