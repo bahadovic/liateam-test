@@ -79,8 +79,6 @@ class AuthService
             'password' => Hash::make($params['password']),
         ]);
 
-        $token =  JWT::setup(user: $user);
-
-        return response()->json(['token' => $token], 201);
+        return responseFormatter()->success( message: 'register.successful',showMessage: false);
     }
 }

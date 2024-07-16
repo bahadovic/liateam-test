@@ -29,28 +29,19 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        return Product::findOrFail($id);
+        $data = $this->service->show(params: ['id' => $id]);
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
     public function update(ProductUpdateRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'price' => 'sometimes|numeric',
-            'inventory' => 'sometimes|integer',
-        ]);
-
-        $product = Product::findOrFail($id);
-        $product->update($validatedData);
-
-        return response()->json($product);
+        $data = $this->service->update(params: $request->safe()->merge(['id' => $id])->toArray());
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
-        $product->delete();
-
-        return response()->json(null, 204);
+        $data = $this->service->destroy(params: ['id' => $id]);
+        return response()->json(data: $data['data'], status: $data['httpStatusCode']);
     }
 }
