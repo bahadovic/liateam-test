@@ -18,6 +18,13 @@ This project is a Laravel-based RESTful API that implements JWT-based authentica
 
 - composer install
 
+## Configure Environment Variables
+
+- Copy the .env.example file to .env:  
+      cp .env.example .env
+
+- Update the .env file with your database and cache configurations
+
 ## Authentication Endpoints
 
 - Register: POST /api/register
