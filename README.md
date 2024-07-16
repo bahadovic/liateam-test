@@ -9,7 +9,6 @@ This project is a Laravel-based RESTful API that implements JWT-based authentica
 - MongoDB
 - Redis
 
-
 ## INSTALL MONGODB EXTENSION FOR PHP
 
 - sudo apt install php-dev php-pear
@@ -19,7 +18,7 @@ This project is a Laravel-based RESTful API that implements JWT-based authentica
 
 - composer install
 
-##Authentication Endpoints
+## Authentication Endpoints
 
 - Register: POST /api/register
 Request Body:
@@ -38,7 +37,7 @@ Request Body:
   "refresh_token": "refresh-token-example",
 }
 
-##Product Endpoints
+## Product Endpoints
 
 - List Products: GET /api/products
 
@@ -62,7 +61,8 @@ Request Body (optional fields):
 
 - Delete Product: DELETE /api/products/{id}
 
-##Order Endpoints
+
+## Order Endpoints
 
 - List Orders: GET /api/orders
 
@@ -100,7 +100,7 @@ Request Body (optional fields):
 
 - Delete Order: DELETE /api/orders/{id}
 
-##Running Tests
+## Running Tests
 
 - php artisan test
 
