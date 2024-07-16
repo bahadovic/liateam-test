@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Builder;
+use MongoDB\Laravel\Relations\belongsToMany;
 
 class Order extends Model
 {
@@ -20,7 +21,7 @@ class Order extends Model
         return $query;
     }
 
-    public function products()
+    public function products() :belongsToMany
     {
         return $this->belongsToMany(Product::class);
     }

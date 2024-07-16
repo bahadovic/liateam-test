@@ -112,7 +112,7 @@ return [
         'mongodb' => [
             'driver' => 'mongodb',
             'dsn' => env('DB_URI'),
-            'database' => 'sample_mflix',
+            'database' => env('DB_DATABASE'),
         ],
 
     ],

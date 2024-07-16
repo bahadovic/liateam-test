@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
+use MongoDB\Laravel\Relations\hasMany;
+use MongoDB\Laravel\Eloquent\Builder;
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     protected $connection = 'mongodb';
 
@@ -44,7 +44,7 @@ class User extends Authenticatable
         return $query;
     }
 
-    public function orders()
+    public function orders() : hasMany
     {
         return $this->hasMany(Order::class);
     }
